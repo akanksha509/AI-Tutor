@@ -1,0 +1,50 @@
+{
+  "name": "ai-tutor-gemma3n",
+  "version": "1.0.0",
+  "description": "AI Tutor powered by Gemma 3n for educational content generation",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "clean": "turbo run clean",
+    "setup": "pnpm install && pnpm build",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up",
+    "docker:up-build": "docker-compose up --build",
+    "docker:down": "docker-compose down",
+    "docker:down-volumes": "docker-compose down -v",
+    "docker:logs": "docker-compose logs -f ai-tutor",
+    "docker:health": "curl -f http://localhost:8000/api/health",
+    "docker:clean": "docker system prune -f && docker volume prune -f",
+    "docker:rebuild": "docker-compose down -v && docker system prune -f && docker-compose up --build"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "turbo": "^1.10.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/ai-tutor-gemma3n"
+  },
+  "keywords": [
+    "ai",
+    "tutor",
+    "gemma3n",
+    "education",
+    "hackathon",
+    "ollama",
+    "fastapi",
+    "react",
+    "docker"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

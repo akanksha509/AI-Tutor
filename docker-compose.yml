@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: ai-tutor-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: ai_tutor
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # AI Tutor Application (Frontend + Backend)
+  ai-tutor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-tutor-app
+    ports:
+      - "3000:3000" # Frontend
+      - "8000:8000" # Backend API
+    env_file:
+      - ./apps/api/.env.docker
+      - ./apps/web/.env.docker
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  default:
+    name: ai-tutor-network
